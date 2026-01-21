@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tienda - Cadenas y Busus</title>
+  <style>
+    :root{
+      --accent: #4f90d9;       /* azul suave */
+  --accent-2: #6ec1b3;     /* verde menta */
+  --muted: #555555;         /* gris neutro */
+  --bg: #f7f7f7;            /* fondo claro */
+  --card: #ffffff;           /* tarjetas blancas */
+  --glass: rgba(79, 144, 217, 0.12); /* azul translúcido para botones */
+  --text: #111111;           /* texto principal */
+    }
+    *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#fbfaff,#f6f5fb);color:#111827}
+    .container{max-width:1200px;margin:16px auto;padding:12px}
+
+    /* top horizontal bar: logo + title + socials */
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px}
+    .left-brand{display:flex;align-items:center;gap:12px}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px}
+    .brand-text{display:flex;flex-direction:column}
+    .brand-text h1{margin:0;font-size:20px}
+    .brand-text .tag{margin:0;font-size:13px;color:var(--muted)}
+
+    .socials{display:flex;gap:8px;align-items:center}
+  .socials a{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    text-decoration:none;
+    color:#333;
+    background:#fff;
+    border:1px solid #ddd;
+    transition:transform .2s, background .2s;
+  }
+  .socials a:hover{
+    transform: scale(1.1);
+  background: rgba(79, 144, 217, 0.1);
+  }
+  .socials svg{
+    width:16px;
+    height:16px;
+    fill:#000;
+  }
+
+    /* centered category bar (no slider) */
+    .catbar-wrap{display:flex;justify-content:center;border-top:1px solid rgba(0,0,0,0.04);padding:10px 6px}
+    .catbar{display:flex;gap:8px;flex-wrap:wrap;max-width:1000px;justify-content:center}
+    .catbar button{background:transparent;border:none;padding:8px 14px;border-radius:999px;font-weight:700;color:var(--muted);cursor:pointer}
+    .catbar button.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;box-shadow:0 6px 18px rgba(178,140,255,0.12)}
+
+    /* hero search */
+    .hero{
+  margin-top:12px;
+  background: linear-gradient(135deg, #f7f7f7, #e9f0f8); /* sutil degradado azul-gris */
+  border-radius:16px;
+  padding:18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* sombra ligera para profundidad */
+}
+
+    .search{width:100%;max-width:760px;margin:0 auto;display:flex;gap:8px}
+    .search input{flex:1;padding:12px;border-radius:10px;border:0;outline:none}
+    .search button{border-radius:10px;border:none;padding:10px 14px;cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white}
+
+    /* sections */
+    .section{margin-top:22px;padding:0 6px}
+    .section h2{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px 0}
+    .section h2 .more{font-size:13px;color:var(--muted);cursor:pointer;text-decoration:none}
+
+    /* carousel */
+    .carousel{
+      display:flex;
+      gap:14px;
+      overflow-x:auto;
+      padding:18px 12px;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      scroll-behavior:smooth;
+      background:transparent;
+      border-radius:12px;
+    }
+    .carousel::-webkit-scrollbar{height:8px}
+    .carousel::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:8px;opacity:0.9}
+    .carousel{scrollbar-width:thin; scrollbar-color: #c5a7ff transparent;}
+
+    .prod{
+      scroll-snap-align:center;
+      flex:0 0 220px;
+      background:var(--card);
+      border-radius:12px;
+      padding:10px;
+      box-shadow:0 8px 24px rgba(20,20,40,0.04);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      transform:translateZ(0);
+      transition:transform .18s ease, box-shadow .18s ease;
+      cursor:pointer; /* 👈 cursor click */
+    }
+    .prod:hover{transform:translateY(-6px); box-shadow:0 20px 40px rgba(20,20,40,0.07)}
+    .prod img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .prod .name{font-weight:700}
+    .prod .meta{font-size:13px;color:var(--muted)}
+    .prod .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+    .price{font-weight:800}
+
+    /* cart */
+    .cart-fab{position:fixed;right:24px;bottom:24px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;padding:12px 16px;border-radius:14px;box-shadow:0 12px 40px rgba(138,100,255,0.18);cursor:pointer;display:flex;align-items:center;gap:8px;z-index:60}
+    .drawer{position:fixed;right:0;top:0;height:100vh;width:420px;background:white;box-shadow:-24px 0 60px rgba(9,10,12,0.06);transform:translateX(100%);transition:transform .28s;display:flex;flex-direction:column;padding:18px;z-index:70}
+    .drawer.open{transform:translateX(0)}
+    .drawer h3{margin:0;display:flex;align-items:center;justify-content:space-between}
+    .close-drawer{background:transparent;border:none;font-size:20px;cursor:pointer}
+    .cart-list{margin-top:10px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+    .cart-item{display:flex;gap:10px;align-items:center}
+    .mini{width:56px;height:56px;border-radius:8px;background:#f6f4ff;display:grid;place-items:center}
+    .cart-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+
+    .muted{color:var(--muted)}
+    .btn{background:var(--glass);border:none;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white}
+
+    @media (max-width:900px){.prod{flex:0 0 180px}.drawer{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="left-brand">
+        <div class="logo">TB</div>
+        <div class="brand-text">
+          <h1>Tienda Bonita</h1>
+          <div class="tag">Cadenas y Busus — diseño hecho a mano</div>
+        </div>
+      </div>
+
+      <div class="socials">
+        <!-- Facebook -->
+        <a href="https://facebook.com" target="_blank" title="Facebook" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2V12h2.6l-.4 3h-2.2v7A10 10 0 0 0 22 12"/></svg>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://instagram.com" target="_blank" title="Instagram" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm4.5-.9a1.1 1.1 0 1 0 0-2.2 1.1 1.1 0 0 0 0 2.2z"/></svg>
+        </a>
+
+        <!-- TikTok -->
+        <a href="https://tiktok.com" target="_blank" title="TikTok" aria-label="TikTok">
+          <svg viewBox="0 0 24 24"><path d="M16 8.1c1.1.8 2.4 1.3 3.8 1.3V6.5c-.4 0-.8-.1-1.2-.2s-.9-.3-1.3-.6c-.9-.6-1.6-1.6-1.7-2.7h-3.2v13.2c0 1.2-1 2.1-2.2 2.1s-2.2-.9-2.2-2.1 1-2.1 2.2-2.1c.2 0 .5 0 .7.1V11c-.2 0-.5-.1-.7-.1-3 0-5.4 2.3-5.4 5.2S9 21.3 12 21.3s5.4-2.3 5.4-5.2V8.1z"/></svg>
+        </a>
+
+        <!-- WhatsApp -->
+        <a href="https://wa.me/" target="_blank" title="WhatsApp" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M20 4.1A11.7 11.7 0 0 0 12 1a11.8 11.8 0 0 0-10 17.7L1 23l4.4-1.2A11.8 11.8 0 0 0 12 23a11.8 11.8 0 0 0 8-18.9zM12 21a9.8 9.8 0 0 1-5-1.3l-.4-.2-2.6.7.7-2.5-.3-.4a9.9 9.9 0 1 1 7.6 3.7zm5.4-7.5c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1c-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1s-1.2-.4-2.3-1.4c-.9-.8-1.4-1.7-1.6-2s0-.4.1-.6l.5-.6c.2-.2.3-.4.2-.6 0-.1-.6-1.6-.8-2.2-.2-.6-.4-.5-.6-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.2 3.3c.1.2 2.2 3.4 5.3 4.8.7.3 1.2.5 1.6.6.7.2 1.3.2 1.7.1.5-.1 1.8-.7 2-1.3.2-.6.2-1.2.2-1.3-.1-.2-.3-.3-.6-.4z"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- category bar -->
+    <div class="catbar-wrap"><nav class="catbar" id="catbar"></nav></div>
+
+    <section class="hero">
+      <div class="search">
+        <input id="search" placeholder="Busca por producto, estilo o categoría" />
+        <button id="searchBtn">Buscar</button>
+      </div>
+    </section>
+
+    <main id="sections"></main>
+  </div>
+
+  <div class="cart-fab" id="openCart">🛒 <span id="fabCount">0</span></div>
+
+  <aside class="drawer" id="drawer">
+    <h3>Tu carrito <button class="close-drawer" id="closeDrawer">✕</button></h3>
+    <div class="cart-list" id="cartList"><div class="muted">Carrito vacío</div></div>
+    <div class="cart-foot">
+      <div style="display:flex;justify-content:space-between"><div class="muted">Total</div><div id="cartTotal" style="font-weight:800">$0.00</div></div>
+      <div style="display:flex;gap:8px"><button class="btn" id="clear">Vaciar</button><button class="btn primary" id="checkout">Pagar</button></div>
+    </div>
+  </aside>
+
+  <script>
+    const categories = ['Cadenas','Busos','Pulseras','Anillos','Aretes','Relojes','Gorros','Mochilas','Carteras','Accesorios'];
+    const products = [];
+    let idCounter = 1;
+    categories.forEach(cat=>{
+      for(let i=1;i<=7;i++){
+        const name = `${cat} Modelo ${i}`;
+        const price = (10 + Math.floor(Math.random()*120));
+        const seed = encodeURIComponent(cat + '-' + i);
+        const img = `https://picsum.photos/seed/${seed}/600/400`;
+        products.push({id:idCounter++, name, category:cat, price, desc:`${cat} estilo ${i}`, img});
+      }
+    });
+
+    const catbar = document.getElementById('catbar');
+    const sectionsEl = document.getElementById('sections');
+    const searchInput = document.getElementById('search');
+
+    let cart = [];
+    function save(){localStorage.setItem('tienda_cart', JSON.stringify(cart))}
+    function load(){const s = localStorage.getItem('tienda_cart'); if(s) cart = JSON.parse(s)}
+
+    function slug(s){return s.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'')}
+    function format(v){return '$'+Number(v).toFixed(2)}
+
+    function renderCatbar(){
+      catbar.innerHTML='';
+      categories.forEach((c,idx)=>{
+        const b = document.createElement('button');
+        b.textContent = c;
+        if(idx===0) b.classList.add('active');
+        b.addEventListener('click', ()=>{
+          document.querySelectorAll('.catbar button').forEach(x=>x.classList.remove('active'));
+          b.classList.add('active');
+          document.getElementById('section-'+slug(c)).scrollIntoView({behavior:'smooth'});
+        });
+        catbar.appendChild(b);
+      });
+    }
+
+    function renderSections(q=''){
+      sectionsEl.innerHTML='';
+      categories.forEach(cat=>{
+        const sec = document.createElement('section');
+        sec.className='section'; sec.id = 'section-'+slug(cat);
+        sec.innerHTML = `<h2><span>${cat}</span><a class="more" href="category.html?cat=${encodeURIComponent(slug(cat))}">Ver todo →</a></h2>`;
+        const carousel = document.createElement('div'); carousel.className='carousel';
+        const list = products.filter(p=>p.category===cat && (p.name.toLowerCase().includes(q.toLowerCase())||p.desc.toLowerCase().includes(q.toLowerCase())));
+        if(!list.length){ const m=document.createElement('div'); m.className='muted'; m.textContent='No hay productos'; carousel.appendChild(m); }
+        for(const p of list){
+          const card = document.createElement('article'); card.className='prod';
+          card.innerHTML = `
+            <img src="${p.img}" alt="${p.name}" loading="lazy" />
+            <div class="name">${p.name}</div>
+            <div class="meta">${p.desc}</div>
+            <div class="row">
+              <div class="price">${format(p.price)}</div>
+              <div style="display:flex;gap:8px">
+                <button class="btn primary" data-id="${p.id}" data-action="add">Añadir</button>
+              </div>
+            </div>`;
+          // 👉 clic en toda la tarjeta excepto en botón
+          card.addEventListener('click', e=>{
+            if(e.target.closest('button')) return;
+            window.location.href = `detallesproducto.html?id=${p.id}`;
+          });
+          carousel.appendChild(card);
+        }
+        sec.appendChild(carousel);
+        sectionsEl.appendChild(sec);
+      });
+    }
+
+    function renderCart(){
+      const listEl = document.getElementById('cartList'); listEl.innerHTML='';
+      if(!cart.length){ listEl.innerHTML='<div class="muted">Carrito vacío</div>'; updateFab(); return; }
+      let total=0; cart.forEach(it=>{
+        total += it.price*it.qty;
+        const el = document.createElement('div'); el.className='cart-item';
+        el.innerHTML = `
+          <div class="mini"><img src="https://picsum.photos/seed/${encodeURIComponent(it.name)}/80/80" style="width:44px;height:44px;border-radius:6px;object-fit:cover"/></div>
+          <div style="flex:1">
+            <div style="font-weight:700">${it.name}</div>
+            <div class="muted">${format(it.price)} x ${it.qty}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button class="btn" data-id="${it.id}" data-action="plus">+</button>
+            <button class="btn" data-id="${it.id}" data-action="minus">-</button>
+          </div>`;
+        listEl.appendChild(el);
+      });
+      document.getElementById('cartTotal').textContent = format(total);
+      updateFab();
+    }
+    function updateFab(){ document.getElementById('fabCount').textContent = cart.reduce((s,i)=>s+i.qty,0); }
+    function addToCartById(id, qty=1){ const p = products.find(x=>x.id===id); if(!p) return; const ex = cart.find(i=>i.id===id); if(ex) ex.qty += qty; else cart.push({id:p.id,name:p.name,price:p.price,qty}); save(); renderCart(); }
+
+    // delegated events
+    document.addEventListener('click', e=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const id = Number(btn.dataset.id);
+      const action = btn.dataset.action;
+      if(action==='add') addToCartById(id,1);
+      if(action==='plus'){ const it = cart.find(i=>i.id===id); if(it) it.qty++; save(); renderCart(); }
+      if(action==='minus'){ const it = cart.find(i=>i.id===id); if(!it) return; it.qty--; if(it.qty<=0) cart = cart.filter(x=>x.id!==id); save(); renderCart(); }
+    });
+
+    // search
+    document.getElementById('searchBtn').addEventListener('click', ()=>{ renderSections(searchInput.value) });
+    searchInput.addEventListener('keypress', e=>{ if(e.key==='Enter') renderSections(searchInput.value); });
+
+    // cart drawer controls
+    const drawer = document.getElementById('drawer');
+    document.getElementById('openCart').addEventListener('click', ()=>{ drawer.classList.toggle('open') });
+    document.getElementById('closeDrawer').addEventListener('click', ()=>{ drawer.classList.remove('open') });
+    document.getElementById('clear').addEventListener('click', ()=>{ cart=[]; save(); renderCart(); });
+    document.getElementById('checkout').addEventListener('click', ()=>{ if(!cart.length){alert('Carrito vacío'); return} alert('Simulación de pago: total '+document.getElementById('cartTotal').textContent) });
+
+    // init
+    load(); renderCatbar(); renderSections(); renderCart();
+  </script>
+</body>
+</html>

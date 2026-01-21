@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Categoria - Tienda Bonita</title>
+  <style>
+    :root{--accent: #4f90d9;       /* azul suave */
+  --accent-2: #6ec1b3;     /* verde menta */
+  --muted: #555555;         /* gris neutro */
+  --bg: #f7f7f7;            /* fondo claro */
+  --card: #ffffff;           /* tarjetas blancas */
+  --glass: rgba(79, 144, 217, 0.12); /* azul translúcido para botones */
+  --text: #111111;           /* texto principal */}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;margin:0;padding:18px;background:#fbfaff;color:#111}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1100px;margin:0 auto}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800}
+    .title{display:flex;flex-direction:column}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:18px}
+    .card{background:white;padding:12px;border-radius:12px;box-shadow:0 8px 24px rgba(20,20,40,0.04);transition:transform 0.2s, box-shadow 0.2s;cursor:pointer}
+    .card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(20,20,40,0.12)}
+    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+    a.back{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+    a.back:hover{color:#000}
+
+    /* carrito */
+    .cart-fab{position:fixed;right:24px;bottom:24px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;padding:12px 16px;border-radius:14px;box-shadow:0 12px 40px rgba(138,100,255,0.18);cursor:pointer;display:flex;align-items:center;gap:8px;z-index:60}
+    .drawer{position:fixed;right:0;top:0;height:100vh;width:420px;background:white;box-shadow:-24px 0 60px rgba(9,10,12,0.06);transform:translateX(100%);transition:transform .28s;display:flex;flex-direction:column;padding:18px;z-index:70}
+    .drawer.open{transform:translateX(0)}
+    .drawer h3{margin:0;display:flex;align-items:center;justify-content:space-between}
+    .close-drawer{background:transparent;border:none;font-size:20px;cursor:pointer}
+    .cart-list{margin-top:10px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+    .cart-item{display:flex;gap:10px;align-items:center}
+    .mini{width:56px;height:56px;border-radius:8px;background:#f6f4ff;display:grid;place-items:center}
+    .cart-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+    .btn{background:var(--glass);border:none;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white}
+    .muted{color:var(--muted)}
+    @media (max-width:900px){.drawer{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="logo">TB</div>
+      <div class="title">
+        <div id="catName" style="font-weight:800;font-size:18px">Categoria</div>
+        <div style="color:var(--muted)">Productos disponibles</div>
+      </div>
+    </div>
+    <div>
+      <a href="pagina.html" class="back" title="Volver">← Volver</a>
+    </div>
+  </div>
+
+  <main class="container" style="max-width:1100px;margin:18px auto">
+    <div id="grid" class="grid"></div>
+  </main>
+
+  <!-- carrito flotante -->
+  <div class="cart-fab" id="openCart">🛒 <span id="fabCount">0</span></div>
+
+  <!-- drawer -->
+  <aside class="drawer" id="drawer">
+    <h3>Tu carrito <button class="close-drawer" id="closeDrawer">✕</button></h3>
+    <div class="cart-list" id="cartList"><div class="muted">Carrito vacío</div></div>
+    <div class="cart-foot">
+      <div style="display:flex;justify-content:space-between"><div class="muted">Total</div><div id="cartTotal" style="font-weight:800">$0.00</div></div>
+      <div style="display:flex;gap:8px"><button class="btn" id="clear">Vaciar</button><button class="btn primary" id="checkout">Pagar</button></div>
+    </div>
+  </aside>
+
+  <script>
+    const categories=['Cadenas','Busus','Pulseras','Anillos','Aretes','Relojes','Gorros','Mochilas','Carteras','Accesorios'];
+    const products=[]; let idCounter=1;
+    categories.forEach(cat=>{for(let i=1;i<=7;i++){const name=`${cat} Modelo ${i}`;const price=(10+Math.floor(Math.random()*120));const seed=encodeURIComponent(cat+'-'+i);const img=`https://picsum.photos/seed/${seed}/600/400`;products.push({id:idCounter++,name,category:cat,price,desc:`${cat} estilo ${i}`,img});}});
+
+    // carrito en localStorage
+    let cart=[];
+    function save(){localStorage.setItem('tienda_cart',JSON.stringify(cart))}
+    function load(){const s=localStorage.getItem('tienda_cart');if(s) cart=JSON.parse(s)}
+    function format(v){return '$'+Number(v).toFixed(2)}
+    function updateFab(){document.getElementById('fabCount').textContent=cart.reduce((s,i)=>s+i.qty,0)}
+    function renderCart(){
+      const listEl=document.getElementById('cartList');listEl.innerHTML='';
+      if(!cart.length){listEl.innerHTML='<div class="muted">Carrito vacío</div>';updateFab();return;}
+      let total=0;cart.forEach(it=>{total+=it.price*it.qty;
+        const el=document.createElement('div');el.className='cart-item';
+        el.innerHTML=`<div class="mini"><img src="https://picsum.photos/seed/${encodeURIComponent(it.name)}/80/80" style="width:44px;height:44px;border-radius:6px;object-fit:cover"/></div>
+        <div style="flex:1"><div style="font-weight:700">${it.name}</div><div class="muted">${format(it.price)} x ${it.qty}</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><button class="btn" data-id="${it.id}" data-action="plus">+</button><button class="btn" data-id="${it.id}" data-action="minus">-</button></div>`;
+        listEl.appendChild(el);
+      });
+      document.getElementById('cartTotal').textContent=format(total);
+      updateFab();
+    }
+
+    // eventos carrito
+    document.addEventListener('click',e=>{
+      const btn=e.target.closest('button');if(!btn) return;
+      const id=Number(btn.dataset.id);const action=btn.dataset.action;
+      if(action==='plus'){const it=cart.find(i=>i.id===id);if(it) it.qty++;save();renderCart();}
+      if(action==='minus'){const it=cart.find(i=>i.id===id);if(!it) return;it.qty--;if(it.qty<=0) cart=cart.filter(x=>x.id!==id);save();renderCart();}
+    });
+    document.getElementById('openCart').addEventListener('click',()=>{document.getElementById('drawer').classList.toggle('open')});
+    document.getElementById('closeDrawer').addEventListener('click',()=>{document.getElementById('drawer').classList.remove('open')});
+    document.getElementById('clear').addEventListener('click',()=>{cart=[];save();renderCart();});
+    document.getElementById('checkout').addEventListener('click',()=>{if(!cart.length){alert('Carrito vacío');return}alert('Simulación de pago: total '+document.getElementById('cartTotal').textContent)});
+
+    // render categoría
+    function qs(name){const u=new URLSearchParams(location.search);return u.get(name);}
+    const catSlug=qs('cat')||'';const catName=catSlug?catSlug.replace(/-/g,' '):'';document.getElementById('catName').textContent=catName?catName.charAt(0).toUpperCase()+catName.slice(1):'Categoría';
+    const grid=document.getElementById('grid');
+    const list=products.filter(p=>p.category.toLowerCase().replace(/\s+/g,'-')===catSlug);
+    if(!list.length){grid.innerHTML='<p style="color:var(--muted)">No encontramos productos para esta categoría.</p>';}
+    else{list.forEach(p=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<img src="${p.img}" alt="${p.name}" /><div style="font-weight:700;margin-top:8px">${p.name}</div><div style="color:var(--muted);margin-top:6px">${p.desc}</div><div style="font-weight:800;margin-top:10px">$${p.price.toFixed(2)}</div>`;c.addEventListener('click',()=>{window.location.href="detallesproducto.html?id="+p.id});grid.appendChild(c);});}
+
+    // init
+    load();renderCart();
+  </script>
+</body>
+</html>
