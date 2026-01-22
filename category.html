@@ -3,120 +3,211 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Categoria - Tienda Bonita</title>
+  <title>Categoría - Armonía</title>
   <style>
-    :root{--accent: #4f90d9;       /* azul suave */
-  --accent-2: #6ec1b3;     /* verde menta */
-  --muted: #555555;         /* gris neutro */
-  --bg: #f7f7f7;            /* fondo claro */
-  --card: #ffffff;           /* tarjetas blancas */
-  --glass: rgba(79, 144, 217, 0.12); /* azul translúcido para botones */
-  --text: #111111;           /* texto principal */}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;margin:0;padding:18px;background:#fbfaff;color:#111}
-    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1100px;margin:0 auto}
-    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800}
-    .title{display:flex;flex-direction:column}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:18px}
-    .card{background:white;padding:12px;border-radius:12px;box-shadow:0 8px 24px rgba(20,20,40,0.04);transition:transform 0.2s, box-shadow 0.2s;cursor:pointer}
-    .card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(20,20,40,0.12)}
-    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
-    a.back{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
-    a.back:hover{color:#000}
+    :root{
+      --verde-principal: #AAB9B0;
+      --verde-claro: #C8D4CE;
+      --verde-menta: #A5BDB0;
+      --verde-oscuro: #97A99D;
+      --verde-sage: #8E9A92;
+      --dorado-suave: #C5B899;
+      --cafe-dorado: #B8A88E;
+      --cafe-claro: #D4CCBC;
+      --gris-principal: #D9D9D9;
+      --gris-oscuro: #A6A6A6;
+      --blanco: #FFFFFF;
+      --texto-principal: #2E2E2E;
+    }
+    *{box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif}
+    html,body{height:100%;margin:0;background:#FBFAFF;color:var(--texto-principal)}
+    
+    .container{max-width:1200px;margin:16px auto;padding:12px}
 
-    /* carrito */
-    .cart-fab{position:fixed;right:24px;bottom:24px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;padding:12px 16px;border-radius:14px;box-shadow:0 12px 40px rgba(138,100,255,0.18);cursor:pointer;display:flex;align-items:center;gap:8px;z-index:60}
-    .drawer{position:fixed;right:0;top:0;height:100vh;width:420px;background:white;box-shadow:-24px 0 60px rgba(9,10,12,0.06);transform:translateX(100%);transition:transform .28s;display:flex;flex-direction:column;padding:18px;z-index:70}
-    .drawer.open{transform:translateX(0)}
-    .drawer h3{margin:0;display:flex;align-items:center;justify-content:space-between}
-    .close-drawer{background:transparent;border:none;font-size:20px;cursor:pointer}
-    .cart-list{margin-top:10px;display:flex;flex-direction:column;gap:10px;overflow:auto}
-    .cart-item{display:flex;gap:10px;align-items:center}
-    .mini{width:56px;height:56px;border-radius:8px;background:#f6f4ff;display:grid;place-items:center}
-    .cart-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
-    .btn{background:var(--glass);border:none;padding:8px 10px;border-radius:10px;cursor:pointer}
-    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white}
-    .muted{color:var(--muted)}
-    @media (max-width:900px){.drawer{width:100%}}
+    /* topbar */
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;margin-bottom:20px}
+    .left-brand{display:flex;align-items:center;gap:12px}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg, #AAB9B0 0%, #A5BDB0 50%, #97A99D 100%);display:grid;place-items:center;color:var(--blanco);font-weight:800;font-size:20px;letter-spacing:1px;box-shadow:0 4px 16px rgba(170,185,176,0.3), 0 8px 24px rgba(197,184,153,0.1), inset 0 -2px 8px rgba(0,0,0,0.08), inset 0 2px 8px rgba(255,255,255,0.25)}
+    .brand-text{display:flex;flex-direction:column}
+    .brand-text h1{margin:0;font-size:20px;font-weight:500;letter-spacing:1px;color:var(--texto-principal)}
+    .brand-text .tag{margin:0;font-size:13px;color:var(--gris-oscuro);font-weight:400}
+
+    .socials{display:flex;gap:8px;align-items:center}
+    .socials a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;text-decoration:none;color:#333;background:#fff;border:1px solid #ddd;transition:transform .2s, background .2s}
+    .socials a:hover{transform:scale(1.1);background:linear-gradient(135deg, #AAB9B0 0%, #A5BDB0 50%, #97A99D 100%)}
+    .socials a:hover svg{fill:var(--blanco)}
+    .socials svg{width:16px;height:16px;fill:#000;transition:fill .2s}
+
+    /* back link */
+    .back-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:linear-gradient(135deg, rgba(170,185,176,0.08) 0%, rgba(197,184,153,0.08) 100%);border:1px solid rgba(170,185,176,0.2);border-radius:20px;color:var(--texto-principal);text-decoration:none;font-size:14px;font-weight:500;transition:all .3s ease;box-shadow:0 2px 8px rgba(184,168,142,0.04)}
+    .back-btn:hover{background:linear-gradient(135deg, #AAB9B0 0%, #A5BDB0 100%);color:var(--blanco);border-color:transparent;box-shadow:0 4px 12px rgba(170,185,176,0.25);transform:translateX(-4px)}
+    .back-btn svg{width:16px;height:16px;fill:currentColor;transition:transform .3s}
+    .back-btn:hover svg{transform:translateX(-2px)}
+
+    /* category header */
+    .category-header{text-align:center;margin:30px 0 40px 0;padding:20px}
+    .category-header h1{margin:0 0 8px 0;font-size:32px;font-weight:600;letter-spacing:2px;color:var(--texto-principal);font-family:'Palatino Linotype', 'Book Antiqua', Palatino, 'Times New Roman', serif;font-style:italic}
+    .category-header p{margin:0;font-size:14px;color:var(--gris-oscuro);font-family:'Georgia', 'Times New Roman', serif}
+
+    /* grid de productos */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:24px;margin-top:30px;padding:0 12px}
+    
+    .card{
+      background:#FFFFFF;
+      border-radius:12px;
+      padding:8px;
+      box-shadow:0 4px 20px rgba(184,168,142,0.08), 0 2px 8px rgba(170,185,176,0.06), 0 1px 3px rgba(0,0,0,0.03);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      transform:translateZ(0);
+      transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor:pointer;
+      border:1px solid rgba(197,184,153,0.1);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg, transparent, rgba(197,184,153,0.05), transparent);
+      transition:left .6s;
+    }
+    .card:hover::before{left:100%}
+    .card:hover{transform:translateY(-10px) scale(1.03);box-shadow:0 16px 48px rgba(170,185,176,0.15), 0 8px 24px rgba(197,184,153,0.1), 0 4px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);border-color:rgba(197,184,153,0.2)}
+    .card img{width:100%;height:260px;object-fit:cover;border-radius:14px;box-shadow:0 2px 8px rgba(184,168,142,0.06), 0 1px 3px rgba(0,0,0,0.03);filter:saturate(0.85) brightness(1.02) contrast(0.95);transition:filter .3s}
+    .card:hover img{filter:saturate(0.95) brightness(1.05) contrast(1)}
+    .card .name{font-weight:600;color:var(--texto-principal);font-size:15px;letter-spacing:0.3px;margin-top:4px}
+    .card .meta{font-size:13px;color:var(--gris-oscuro);font-weight:400}
+    .card .price{font-weight:700;color:var(--texto-principal);margin-top:6px;font-size:16px}
+
+    /* Animaciones de scroll */
+    .fade-in{opacity:0;transform:translateY(30px);transition:opacity 0.6s ease-out, transform 0.6s ease-out}
+    .fade-in.visible{opacity:1;transform:translateY(0)}
+    .card{opacity:0;transform:translateY(20px) scale(0.95)}
+    .card.visible{opacity:1;transform:translateY(0) scale(1)}
+    .card.visible:hover{transform:translateY(-10px) scale(1.03)}
+    .category-header{opacity:0;transform:translateY(20px);transition:opacity 0.7s ease-out, transform 0.7s ease-out}
+    .category-header.visible{opacity:1;transform:translateY(0)}
+
+    @media (max-width:900px){
+      .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+      .card img{height:180px}
+      .category-header h1{font-size:24px}
+      .topbar{flex-wrap:wrap}
+    }
   </style>
 </head>
 <body>
-  <div class="top">
-    <div style="display:flex;gap:12px;align-items:center">
-      <div class="logo">TB</div>
-      <div class="title">
-        <div id="catName" style="font-weight:800;font-size:18px">Categoria</div>
-        <div style="color:var(--muted)">Productos disponibles</div>
+  <div class="container">
+    <header class="topbar">
+      <div class="left-brand">
+        <div class="logo">A</div>
+        <div class="brand-text">
+          <h1>Armonía</h1>
+          <div class="tag">Uñas & Estética — Bienestar y belleza</div>
+        </div>
       </div>
-    </div>
-    <div>
-      <a href="pagina.html" class="back" title="Volver">← Volver</a>
-    </div>
-  </div>
 
-  <main class="container" style="max-width:1100px;margin:18px auto">
+      <div style="display:flex;gap:16px;align-items:center">
+        <a href="#" id="backBtn" class="back-btn" title="Volver">
+          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          Volver
+        </a>
+        
+        <div class="socials">
+          <a href="https://facebook.com" target="_blank" title="Facebook" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2V12h2.6l-.4 3h-2.2v7A10 10 0 0 0 22 12"/></svg>
+          </a>
+          <a href="https://instagram.com" target="_blank" title="Instagram" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm4.5-.9a1.1 1.1 0 1 0 0-2.2 1.1 1.1 0 0 0 0 2.2z"/></svg>
+          </a>
+          <a href="https://tiktok.com" target="_blank" title="TikTok" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M16 8.1c1.1.8 2.4 1.3 3.8 1.3V6.5c-.4 0-.8-.1-1.2-.2s-.9-.3-1.3-.6c-.9-.6-1.6-1.6-1.7-2.7h-3.2v13.2c0 1.2-1 2.1-2.2 2.1s-2.2-.9-2.2-2.1 1-2.1 2.2-2.1c.2 0 .5 0 .7.1V11c-.2 0-.5-.1-.7-.1-3 0-5.4 2.3-5.4 5.2S9 21.3 12 21.3s5.4-2.3 5.4-5.2V8.1z"/></svg>
+          </a>
+          <a href="https://wa.me/" target="_blank" title="WhatsApp" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M20 4.1A11.7 11.7 0 0 0 12 1a11.8 11.8 0 0 0-10 17.7L1 23l4.4-1.2A11.8 11.8 0 0 0 12 23a11.8 11.8 0 0 0 8-18.9zM12 21a9.8 9.8 0 0 1-5-1.3l-.4-.2-2.6.7.7-2.5-.3-.4a9.9 9.9 0 1 1 7.6 3.7zm5.4-7.5c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1c-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1s-1.2-.4-2.3-1.4c-.9-.8-1.4-1.7-1.6-2s0-.4.1-.6l.5-.6c.2-.2.3-.4.2-.6 0-.1-.6-1.6-.8-2.2-.2-.6-.4-.5-.6-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.2 3.3c.1.2 2.2 3.4 5.3 4.8.7.3 1.2.5 1.6.6.7.2 1.3.2 1.7.1.5-.1 1.8-.7 2-1.3.2-.6.2-1.2.2-1.3-.1-.2-.3-.3-.6-.4z"/></svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="category-header">
+      <h1 id="catName">Categoría</h1>
+      <p>Explora nuestra selección exclusiva</p>
+    </div>
+
     <div id="grid" class="grid"></div>
-  </main>
-
-  <!-- carrito flotante -->
-  <div class="cart-fab" id="openCart">🛒 <span id="fabCount">0</span></div>
-
-  <!-- drawer -->
-  <aside class="drawer" id="drawer">
-    <h3>Tu carrito <button class="close-drawer" id="closeDrawer">✕</button></h3>
-    <div class="cart-list" id="cartList"><div class="muted">Carrito vacío</div></div>
-    <div class="cart-foot">
-      <div style="display:flex;justify-content:space-between"><div class="muted">Total</div><div id="cartTotal" style="font-weight:800">$0.00</div></div>
-      <div style="display:flex;gap:8px"><button class="btn" id="clear">Vaciar</button><button class="btn primary" id="checkout">Pagar</button></div>
-    </div>
-  </aside>
+  </div>
 
   <script>
     const categories=['Cadenas','Busus','Pulseras','Anillos','Aretes','Relojes','Gorros','Mochilas','Carteras','Accesorios'];
     const products=[]; let idCounter=1;
     categories.forEach(cat=>{for(let i=1;i<=7;i++){const name=`${cat} Modelo ${i}`;const price=(10+Math.floor(Math.random()*120));const seed=encodeURIComponent(cat+'-'+i);const img=`https://picsum.photos/seed/${seed}/600/400`;products.push({id:idCounter++,name,category:cat,price,desc:`${cat} estilo ${i}`,img});}});
 
-    // carrito en localStorage
-    let cart=[];
-    function save(){localStorage.setItem('tienda_cart',JSON.stringify(cart))}
-    function load(){const s=localStorage.getItem('tienda_cart');if(s) cart=JSON.parse(s)}
     function format(v){return '$'+Number(v).toFixed(2)}
-    function updateFab(){document.getElementById('fabCount').textContent=cart.reduce((s,i)=>s+i.qty,0)}
-    function renderCart(){
-      const listEl=document.getElementById('cartList');listEl.innerHTML='';
-      if(!cart.length){listEl.innerHTML='<div class="muted">Carrito vacío</div>';updateFab();return;}
-      let total=0;cart.forEach(it=>{total+=it.price*it.qty;
-        const el=document.createElement('div');el.className='cart-item';
-        el.innerHTML=`<div class="mini"><img src="https://picsum.photos/seed/${encodeURIComponent(it.name)}/80/80" style="width:44px;height:44px;border-radius:6px;object-fit:cover"/></div>
-        <div style="flex:1"><div style="font-weight:700">${it.name}</div><div class="muted">${format(it.price)} x ${it.qty}</div></div>
-        <div style="display:flex;flex-direction:column;gap:6px"><button class="btn" data-id="${it.id}" data-action="plus">+</button><button class="btn" data-id="${it.id}" data-action="minus">-</button></div>`;
-        listEl.appendChild(el);
-      });
-      document.getElementById('cartTotal').textContent=format(total);
-      updateFab();
-    }
-
-    // eventos carrito
-    document.addEventListener('click',e=>{
-      const btn=e.target.closest('button');if(!btn) return;
-      const id=Number(btn.dataset.id);const action=btn.dataset.action;
-      if(action==='plus'){const it=cart.find(i=>i.id===id);if(it) it.qty++;save();renderCart();}
-      if(action==='minus'){const it=cart.find(i=>i.id===id);if(!it) return;it.qty--;if(it.qty<=0) cart=cart.filter(x=>x.id!==id);save();renderCart();}
-    });
-    document.getElementById('openCart').addEventListener('click',()=>{document.getElementById('drawer').classList.toggle('open')});
-    document.getElementById('closeDrawer').addEventListener('click',()=>{document.getElementById('drawer').classList.remove('open')});
-    document.getElementById('clear').addEventListener('click',()=>{cart=[];save();renderCart();});
-    document.getElementById('checkout').addEventListener('click',()=>{if(!cart.length){alert('Carrito vacío');return}alert('Simulación de pago: total '+document.getElementById('cartTotal').textContent)});
 
     // render categoría
     function qs(name){const u=new URLSearchParams(location.search);return u.get(name);}
     const catSlug=qs('cat')||'';const catName=catSlug?catSlug.replace(/-/g,' '):'';document.getElementById('catName').textContent=catName?catName.charAt(0).toUpperCase()+catName.slice(1):'Categoría';
     const grid=document.getElementById('grid');
     const list=products.filter(p=>p.category.toLowerCase().replace(/\s+/g,'-')===catSlug);
-    if(!list.length){grid.innerHTML='<p style="color:var(--muted)">No encontramos productos para esta categoría.</p>';}
-    else{list.forEach(p=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<img src="${p.img}" alt="${p.name}" /><div style="font-weight:700;margin-top:8px">${p.name}</div><div style="color:var(--muted);margin-top:6px">${p.desc}</div><div style="font-weight:800;margin-top:10px">$${p.price.toFixed(2)}</div>`;c.addEventListener('click',()=>{window.location.href="detallesproducto.html?id="+p.id});grid.appendChild(c);});}
+    if(!list.length){grid.innerHTML='<p style="color:var(--gris-oscuro);text-align:center;margin-top:40px">No encontramos productos para esta categoría.</p>';}
+    else{list.forEach(p=>{
+      const c=document.createElement('div');
+      c.className='card';
+      c.innerHTML=`<img src="${p.img}" alt="${p.name}" />
+        <div class="name">${p.name}</div>
+        <div class="meta">${p.desc}</div>
+        <div class="price">${format(p.price)}</div>`;
+      c.addEventListener('click',()=>{window.location.href="detallesproducto.html?id="+p.id});
+      grid.appendChild(c);
+    });}
 
-    // init
-    load();renderCart();
+    // back dinámico - volver a la página anterior
+    document.getElementById('backBtn').addEventListener('click',function(e){
+      e.preventDefault();
+      const referrer=document.referrer;
+      if(referrer && referrer.includes('index.html')){
+        window.location.href=referrer;
+      } else if(window.history.length > 1){
+        window.history.back();
+      } else {
+        window.location.href='index.html';
+      }
+    });
+
+    // Intersection Observer para animaciones de scroll
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observar elementos cuando se renderizan
+    setTimeout(() => {
+      // Observar header
+      const header = document.querySelector('.category-header');
+      if(header) observer.observe(header);
+      
+      // Observar cards con delay escalonado
+      document.querySelectorAll('.card').forEach((card, index) => {
+        card.style.transitionDelay = `${index * 0.05}s`;
+        observer.observe(card);
+      });
+    }, 100);
   </script>
 </body>
 </html>
